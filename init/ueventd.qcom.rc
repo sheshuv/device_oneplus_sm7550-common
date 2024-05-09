@@ -64,7 +64,14 @@
 # Firmware directory Path
 # Below macro will be read by uevent and path will
 # be added to search path for firmware loading
-firmware_directories /vendor/firmware_mnt/image/
+
+# ifndef OPLUS_FEATURE_WIFI_BDF
+# lixiong2@CONNECTIVITY.WIFI.HARDWARE.BDF.2940246 , 2022/06/24,
+# Modify for: multi projects using different bdf, adding persist into firmware_directories
+# firmware_directories /vendor/firmware_mnt/image/
+# else /* OPLUS_FEATURE_WIFI_BDF */
+firmware_directories /mnt/vendor/persist/copy/ /odm/etc/wifi/ /mnt/vendor/persist/ /vendor/firmware_mnt/image/
+# endif /* OPLUS_FEATURE_WIFI_BDF */
 
 subsystem dma_heap
     devname uevent_devpath
@@ -441,19 +448,42 @@ subsystem mem_buf_vm
 # Kmsg device
 /dev/kmsg                                               0620   root       system
 
+# Huaiwei.Ding@BSP.Kernel.Stability, 2021/07/01, add for explorer project
+/dev/explorer_preisp                                    0660   cameraserver   camera
+
 # LED class devices
 /sys/class/leds/red      delay_on     0640    system    system
 /sys/class/leds/red      delay_off    0640    system    system
 /sys/class/leds/red      breath       0640    system    system
-/sys/class/leds/red      trigger      0640    system    system
+/sys/class/leds/red      trigger      0664    system    system
+/sys/class/leds/red      brightness   0664    system    system
+/sys/class/leds/red      tr1          0664    system    system
+/sys/class/leds/red      tf1          0664    system    system
+/sys/class/leds/red      toff         0664    system    system
+/sys/class/leds/red      ton          0664    system    system
+/sys/class/leds/red      support      0664    system    system
+
 /sys/class/leds/green    delay_on     0640    system    system
 /sys/class/leds/green    delay_off    0640    system    system
 /sys/class/leds/green    breath       0640    system    system
-/sys/class/leds/green    trigger      0640    system    system
+/sys/class/leds/green    trigger      0664    system    system
+/sys/class/leds/green    brightness   0664    system    system
+/sys/class/leds/green    tr1          0664    system    system
+/sys/class/leds/green    tf1          0664    system    system
+/sys/class/leds/green    toff         0664    system    system
+/sys/class/leds/green    ton          0664    system    system
+/sys/class/leds/green    support      0664    system    system
+
 /sys/class/leds/blue     delay_on     0640    system    system
 /sys/class/leds/blue     delay_off    0640    system    system
 /sys/class/leds/blue     breath       0640    system    system
-/sys/class/leds/blue     trigger      0640    system    system
+/sys/class/leds/blue     trigger      0664    system    system
+/sys/class/leds/blue     brightness   0664    system    system
+/sys/class/leds/blue     tr1          0664    system    system
+/sys/class/leds/blue     tf1          0664    system    system
+/sys/class/leds/blue     toff         0664    system    system
+/sys/class/leds/blue     ton          0664    system    system
+/sys/class/leds/blue     support      0664    system    system
 
 # NPU device
 /dev/msm_npu             0644   system     system
@@ -503,6 +533,7 @@ subsystem mem_buf_vm
 /sys/class/graphics/fb0     modes                    0664    system  graphics
 /sys/class/graphics/fb0     mode                     0664    system  graphics
 /sys/class/graphics/fb0     msm_cmd_autorefresh_en   0664    system  graphics
+*/
 
 /sys/devices/platform/soc/ae00000.qcom,mdss_mdp power/control 0664 system graphics
 

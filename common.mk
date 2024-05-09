@@ -46,7 +46,7 @@ PRODUCT_PACKAGES += \
     android.hardware.bluetooth.audio-impl \
     android.hardware.soundtrigger@2.3-impl \
     audio.bluetooth.default \
-    audio.primary.kalama \
+    audio.primary.crow \
     audio.r_submix.default \
     audio.usb.default \
     audioadsprpcd \
@@ -60,7 +60,7 @@ PRODUCT_PACKAGES += \
     libsndcardparser \
     libtinycompress \
     libvolumelistener \
-    sound_trigger.primary.kalama
+    sound_trigger.primary.crow
 
 AUDIO_HAL_DIR := hardware/qcom-caf/sm8550/audio/primary-hal
 
@@ -430,8 +430,8 @@ PRODUCT_SHIPPING_API_LEVEL := $(BOARD_API_LEVEL)
 PRODUCT_SOONG_NAMESPACES += \
     $(LOCAL_PATH) \
     hardware/oplus \
-    kernel/oneplus/sm8550 \
-    kernel/oneplus/sm8550-modules
+    kernel/oneplus/sm7550 \
+    kernel/oneplus/sm7550-modules
 
 # Storage
 $(call inherit-product, $(SRC_TARGET_DIR)/product/emulated_storage.mk)
@@ -543,4 +543,4 @@ PRODUCT_BOOT_JARS += \
     WfdCommon
 
 # Inherit from the proprietary files makefile.
-$(call inherit-product, vendor/oneplus/sm8550-common/sm8550-common-vendor.mk)
+$(call inherit-product, vendor/oneplus/sm7550-common/sm7550-common-vendor.mk)
