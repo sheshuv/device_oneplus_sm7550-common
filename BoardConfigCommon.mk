@@ -9,6 +9,8 @@ BUILD_BROKEN_ELF_PREBUILT_PRODUCT_COPY_FILES := true
 BUILD_BROKEN_INCORRECT_PARTITION_IMAGES := true
 
 COMMON_PATH := device/oneplus/sm7550-common
+DEVICE_PATH := device/oneplus/benz
+KERNEL_PATH := $(DEVICE_PATH)-kernel
 
 # A/B
 AB_OTA_UPDATER := true
@@ -77,8 +79,17 @@ BOARD_RAMDISK_USE_LZ4 := true
 
 # DTB / DTBO
 BOARD_INCLUDE_DTB_IN_BOOTIMG := true
-BOARD_USES_QCOM_MERGE_DTBS_SCRIPT := true
+#BOARD_USES_QCOM_MERGE_DTBS_SCRIPT := true
 TARGET_NEEDS_DTBOIMAGE := true
+BOARD_USES_DT := true
+BOARD_PREBUILT_DTBIMAGE_DIR := $(KERNEL_PATH)/dtbs
+BOARD_PREBUILT_DTBOIMAGE := $(KERNEL_PATH)/dtbs/dtbo.img
+TARGET_FORCE_PREBUILT_KERNEL := true
+TARGET_KERNEL_CONFIG := config
+TARGET_PREBUILT_DTB := $(DEVICE_PATH)-kernel/dtb.img
+
+# Kill lineage kernel build task while preserving kernel
+TARGET_NO_KERNEL_OVERRIDE := true
 
 # Properties
 TARGET_ODM_PROP += $(COMMON_PATH)/odm.prop
@@ -124,12 +135,21 @@ BOARD_KERNEL_BASE := 0x00000000
 BOARD_KERNEL_PAGESIZE := 4096
 BOARD_KERNEL_IMAGE_NAME := Image
 
-TARGET_KERNEL_SOURCE := kernel/oneplus/sm7550
-TARGET_KERNEL_CONFIG := \
-    gki_defconfig \
-    vendor/kalama_GKI.config \
-    vendor/oplus/kalama_GKI.config \
-    vendor/debugfs.config
+TARGET_KERNEL_SOURCE := $(KERNEL_PATH)/kernel-headers
+
+TARGET_KERNEL_VERSION := 5.15
+LOCAL_KERNEL := $(KERNEL_PATH)/Image
+PRODUCT_COPY_FILES += \
+	$(LOCAL_KERNEL):kernel
+
+#TARGET_KERNEL_SOURCE := kernel/oneplus/sm7550
+#TARGET_KERNEL_CONFIG := \
+#    gki_defconfig \
+#    vendor/kalama_GKI.config \
+#    vendor/oplus/kalama_GKI.config \
+#    vendor/debugfs.config
+
+
 
 # Kernel modules
 BOARD_SYSTEM_KERNEL_MODULES_LOAD := $(strip $(shell cat $(COMMON_PATH)/modules.load.system_dlkm))
@@ -173,7 +193,7 @@ TARGET_HEALTH_CHARGING_CONTROL_CHARGING_PATH := /sys/class/oplus_chg/battery/mmi
 
 # Platform
 BOARD_USES_QCOM_HARDWARE := true
-TARGET_BOARD_PLATFORM := kalama
+TARGET_BOARD_PLATFORM := crow
 
 # Metadata
 BOARD_USES_METADATA_PARTITION := true
