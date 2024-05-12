@@ -4,10 +4,6 @@
     "target_path": "hardware/oplus"
   },
   {
-    "repository": "android_kernel_oneplus_sm7550",
-    "target_path": "kernel/oneplus/sm7550"
-  },
-  {
     "repository": "android_kernel_oneplus_sm7550-devicetrees",
     "target_path": "kernel/oneplus/sm7550-devicetrees"
   },
