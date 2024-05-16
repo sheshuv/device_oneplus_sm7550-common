@@ -1112,9 +1112,11 @@ vendor/lib64/libfastcvdsp_stub.so
 # Fingerprint - from benz CPH2449_13.1.0.596(EX01)
 odm/bin/hw/vendor.oplus.hardware.biometrics.fingerprint@2.1-service_uff
 odm/etc/init/vendor.oplus.hardware.biometrics.fingerprint@2.1-service.rc
-odm/etc/vintf/manifest/manifest_oplus_fingerprint_aidl.xml
+#odm/etc/vintf/manifest/manifest_oplus_fingerprint_aidl.xml
+odm/lib64/android.hardware.biometrics.common-V1-ndk.so
+odm/lib64/android.hardware.biometrics.fingerprint-V1-ndk.so
 odm/lib64/libolc_vnd.so
-odm/lib64/vendor.oplus.hardware.biometrics.fingerprint@2.1.so
+#odm/lib64/vendor.oplus.hardware.biometrics.fingerprint@2.1.so
 odm/lib64/vendor.oplus.hardware.commondcs-V1-ndk.so
 odm/lib64/vendor.oplus.hardware.olc2-V1-ndk.so
 odm/lib64/vendor.oplus.hardware.touch-V1-ndk.so
