@@ -68,6 +68,8 @@ TARGET_USES_QCOM_MM_AUDIO := true
 
 # Bootloader
 TARGET_BOOTLOADER_BOARD_NAME := kalama
+TARGET_NO_BOOTLOADER := true
+TARGET_USES_UEFI := true
 
 # Bluetooth
 BOARD_BLUETOOTH_BDROID_BUILDCFG_INCLUDE_DIR := $(COMMON_PATH)/bluetooth/include
@@ -80,13 +82,13 @@ BOARD_RAMDISK_USE_LZ4 := true
 # DTB / DTBO
 BOARD_INCLUDE_DTB_IN_BOOTIMG := true
 #BOARD_USES_QCOM_MERGE_DTBS_SCRIPT := true
-TARGET_NEEDS_DTBOIMAGE := true
+#TARGET_NEEDS_DTBOIMAGE := true
 BOARD_USES_DT := true
 BOARD_PREBUILT_DTBIMAGE_DIR := $(KERNEL_PATH)/dtbs
 BOARD_PREBUILT_DTBOIMAGE := $(KERNEL_PATH)/dtbs/dtbo.img
 TARGET_FORCE_PREBUILT_KERNEL := true
 #TARGET_KERNEL_CONFIG := config
-TARGET_PREBUILT_DTB := $(DEVICE_PATH)-kernel/dtb.img
+#TARGET_PREBUILT_DTB := $(DEVICE_PATH)-kernel/dtb.img
 
 TARGET_KERNEL_APPEND_DTB := false
 BOARD_KERNEL_SEPARATED_DTBO := true
@@ -122,7 +124,7 @@ ODM_MANIFEST_FILES := \
     $(COMMON_PATH)/network_manifest_odm.xml
 
 # Init
-TARGET_INIT_VENDOR_LIB := //$(COMMON_PATH):libinit_oplus
+#TARGET_INIT_VENDOR_LIB := //$(COMMON_PATH):libinit_oplus
 
 # Init Boot
 BOARD_INIT_BOOT_HEADER_VERSION := 4
@@ -133,6 +135,7 @@ BOARD_BOOTCONFIG := \
     androidboot.hardware=qcom \
     androidboot.memcg=1 \
     androidboot.usbcontroller=a600000.dwc3 \
+    androidboot.selinux=permissive \
     androidboot.init_fatal_reboot_target=recovery
 
 BOARD_USES_GENERIC_KERNEL_IMAGE := true
@@ -149,15 +152,9 @@ PRODUCT_COPY_FILES += \
 
 BOARD_KERNEL_CMDLINE := \
     video=vfb:640x400,bpp=32,memsize=3072000 \
-    androidboot.selinux=permissive \
     disable_dma32=on \
     swinfo.fingerprint=$(LINEAGE_VERSION) \
     mtdoops.fingerprint=$(LINEAGE_VERSION) 
-
-BOARD_BOOTCONFIG := \
-    androidboot.hardware=qcom \
-    androidboot.memcg=1 \
-    androidboot.usbcontroller=a600000.dwc3
 
 # Kernel modules
 BOARD_VENDOR_RAMDISK_KERNEL_MODULES_LOAD := $(strip $(shell cat $(KERNEL_PATH)/vendor_ramdisk/modules.load))
@@ -179,7 +176,12 @@ BOARD_VENDOR_KERNEL_MODULES_BLOCKLIST_FILE :=  $(KERNEL_PATH)/vendor_dlkm/module
 PRODUCT_COPY_FILES += \
     $(call find-copy-subdir-files,*,$(KERNEL_PATH)/vendor_dlkm/,$(TARGET_COPY_OUT_VENDOR_DLKM)/lib/modules) \
     $(call find-copy-subdir-files,*,$(KERNEL_PATH)/vendor_ramdisk/,$(TARGET_COPY_OUT_VENDOR_RAMDISK)/lib/modules) \
-    $(call find-copy-subdir-files,*,$(KERNEL_PATH)/system_dlkm/,$(TARGET_COPY_OUT_SYSTEM_DLKM)/lib/modules/5.15.94)
+    $(call find-copy-subdir-files,*,$(KERNEL_PATH)/system_dlkm/,$(TARGET_COPY_OUT_SYSTEM_DLKM)/lib/modules/5.15.123)
+
+PRODUCT_COPY_FILES += $(COMMON_PATH)/init/fstab.qcom:$(TARGET_COPY_OUT_VENDOR_RAMDISK)/first_stage_ramdisk/fstab.qcom
+
+
+
 
 #TARGET_KERNEL_SOURCE := kernel/oneplus/sm7550
 #TARGET_KERNEL_CONFIG := \
@@ -280,8 +282,8 @@ ENABLE_VENDOR_RIL_SERVICE := true
 
 # Security
 BOOT_SECURITY_PATCH := 2024-01-05
-VENDOR_SECURITY_PATCH := $(BOOT_SECURITY_PATCH)
-
+#VENDOR_SECURITY_PATCH := $(BOOT_SECURITY_PATCH)
+VENDOR_SECURITY_PATCH := 2024-05-23
 # SEPolicy
 include device/qcom/sepolicy_vndr/SEPolicy.mk
 include hardware/oplus/sepolicy/qti/SEPolicy.mk
