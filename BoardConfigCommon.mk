@@ -67,7 +67,7 @@ BOARD_USES_ALSA_AUDIO := true
 TARGET_USES_QCOM_MM_AUDIO := true
 
 # Bootloader
-TARGET_BOOTLOADER_BOARD_NAME := kalama
+TARGET_BOOTLOADER_BOARD_NAME := crow
 TARGET_NO_BOOTLOADER := true
 TARGET_USES_UEFI := true
 
@@ -81,21 +81,25 @@ BOARD_RAMDISK_USE_LZ4 := true
 
 # DTB / DTBO
 BOARD_INCLUDE_DTB_IN_BOOTIMG := true
-#BOARD_USES_QCOM_MERGE_DTBS_SCRIPT := true
-#TARGET_NEEDS_DTBOIMAGE := true
-BOARD_USES_DT := true
-BOARD_PREBUILT_DTBIMAGE_DIR := $(KERNEL_PATH)/dtbs
-BOARD_PREBUILT_DTBOIMAGE := $(KERNEL_PATH)/dtbs/dtbo.img
+BOARD_KERNEL_BINARIES := kernel
+TARGET_PREBUILT_KERNEL := $(DEVICE_PATH)-kernel/Image
+BOARD_USES_QCOM_MERGE_DTBS_SCRIPT := true
+TARGET_NEEDS_DTBOIMAGE := true
+#BOARD_USES_DT := true
+#BOARD_PREBUILT_DTBIMAGE_DIR := $(KERNEL_PATH)/dtbs
+BOARD_PREBUILT_DTBOIMAGE := $(KERNEL_PATH)/dtbo.img
 TARGET_FORCE_PREBUILT_KERNEL := true
 #TARGET_KERNEL_CONFIG := config
-#TARGET_PREBUILT_DTB := $(DEVICE_PATH)-kernel/dtb.img
+TARGET_PREBUILT_DTB := $(DEVICE_PATH)-kernel/dtb.img
 
-TARGET_KERNEL_APPEND_DTB := false
-BOARD_KERNEL_SEPARATED_DTBO := true
+#TARGET_KERNEL_APPEND_DTB := false
+#BOARD_KERNEL_SEPARATED_DTBO := true
 
 
 # Kill lineage kernel build task while preserving kernel
-TARGET_NO_KERNEL_OVERRIDE := true
+#TARGET_NO_KERNEL_OVERRIDE := true
+
+INLINE_KERNEL_BUILDING := true
 
 # Properties
 TARGET_ODM_PROP += $(COMMON_PATH)/odm.prop
@@ -136,42 +140,43 @@ BOARD_BOOTCONFIG := \
     androidboot.memcg=1 \
     androidboot.usbcontroller=a600000.dwc3 \
     androidboot.selinux=permissive \
-    androidboot.init_fatal_reboot_target=recovery
+#    androidboot.init_fatal_reboot_target=recovery
 
 BOARD_USES_GENERIC_KERNEL_IMAGE := true
 BOARD_KERNEL_BASE := 0x00000000
 BOARD_KERNEL_PAGESIZE := 4096
 BOARD_KERNEL_IMAGE_NAME := Image
 
-TARGET_KERNEL_SOURCE := $(KERNEL_PATH)/kernel-headers
+#TARGET_KERNEL_SOURCE := $(KERNEL_PATH)/kernel-headers
 
-TARGET_KERNEL_VERSION := 5.15
+#TARGET_KERNEL_VERSION := 5.15
 LOCAL_KERNEL := $(KERNEL_PATH)/Image
 PRODUCT_COPY_FILES += \
-	$(LOCAL_KERNEL):kernel
+	$(LOCAL_KERNEL):kernel \
+	$(DEVICE_PATH)-kernel/dtb.img:$(TARGET_COPY_OUT)/dtb.img 
 
-BOARD_KERNEL_CMDLINE := \
-    video=vfb:640x400,bpp=32,memsize=3072000 \
-    disable_dma32=on \
-    swinfo.fingerprint=$(LINEAGE_VERSION) \
-    mtdoops.fingerprint=$(LINEAGE_VERSION) 
+#BOARD_KERNEL_CMDLINE := \
+#    video=vfb:640x400,bpp=32,memsize=3072000 \
+#    disable_dma32=on \
+#    swinfo.fingerprint=$(LINEAGE_VERSION) \
+#    mtdoops.fingerprint=$(LINEAGE_VERSION) 
 
 # Kernel modules
-BOARD_VENDOR_RAMDISK_KERNEL_MODULES_LOAD := $(strip $(shell cat $(KERNEL_PATH)/vendor_ramdisk/modules.load))
-BOARD_VENDOR_RAMDISK_KERNEL_MODULES := $(addprefix $(KERNEL_PATH)/vendor_ramdisk/, $(BOARD_VENDOR_RAMDISK_KERNEL_MODULES_LOAD))
-BOARD_VENDOR_RAMDISK_KERNEL_MODULES_BLOCKLIST_FILE := $(KERNEL_PATH)/vendor_ramdisk/modules.blocklist
+#BOARD_VENDOR_RAMDISK_KERNEL_MODULES_LOAD := $(strip $(shell cat $(KERNEL_PATH)/vendor_ramdisk/modules.load))
+#BOARD_VENDOR_RAMDISK_KERNEL_MODULES := $(addprefix $(KERNEL_PATH)/vendor_ramdisk/, $(BOARD_VENDOR_RAMDISK_KERNEL_MODULES_LOAD))
+#BOARD_VENDOR_RAMDISK_KERNEL_MODULES_BLOCKLIST_FILE := $(KERNEL_PATH)/vendor_ramdisk/modules.blocklist
 
 # Also add recovery modules to vendor ramdisk
-BOARD_VENDOR_RAMDISK_RECOVERY_KERNEL_MODULES_LOAD := $(strip $(shell cat $(KERNEL_PATH)/vendor_ramdisk/modules.load.recovery))
-RECOVERY_MODULES := $(addprefix $(KERNEL_PATH)/vendor_ramdisk/, $(BOARD_VENDOR_RAMDISK_RECOVERY_KERNEL_MODULES_LOAD))
+#BOARD_VENDOR_RAMDISK_RECOVERY_KERNEL_MODULES_LOAD := $(strip $(shell cat $(KERNEL_PATH)/vendor_ramdisk/modules.load.recovery))
+#RECOVERY_MODULES := $(addprefix $(KERNEL_PATH)/vendor_ramdisk/, $(BOARD_VENDOR_RAMDISK_RECOVERY_KERNEL_MODULES_LOAD))
 
 # Prevent duplicated entries (to solve duplicated build rules problem)
-BOARD_VENDOR_RAMDISK_KERNEL_MODULES := $(sort $(BOARD_VENDOR_RAMDISK_KERNEL_MODULES) $(RECOVERY_MODULES))
+#BOARD_VENDOR_RAMDISK_KERNEL_MODULES := $(sort $(BOARD_VENDOR_RAMDISK_KERNEL_MODULES) $(RECOVERY_MODULES))
 
 # Vendor modules (installed to vendor_dlkm)
-BOARD_VENDOR_KERNEL_MODULES_LOAD := $(strip $(shell cat $(KERNEL_PATH)/vendor_dlkm/modules.load))
-BOARD_VENDOR_KERNEL_MODULES := $(addprefix $(KERNEL_PATH)/vendor_dlkm/, $(BOARD_VENDOR_KERNEL_MODULES_LOAD))
-BOARD_VENDOR_KERNEL_MODULES_BLOCKLIST_FILE :=  $(KERNEL_PATH)/vendor_dlkm/modules.blocklist
+#BOARD_VENDOR_KERNEL_MODULES_LOAD := $(strip $(shell cat $(KERNEL_PATH)/vendor_dlkm/modules.load))
+#BOARD_VENDOR_KERNEL_MODULES := $(addprefix $(KERNEL_PATH)/vendor_dlkm/, $(BOARD_VENDOR_KERNEL_MODULES_LOAD))
+#BOARD_VENDOR_KERNEL_MODULES_BLOCKLIST_FILE :=  $(KERNEL_PATH)/vendor_dlkm/modules.blocklist
 
 PRODUCT_COPY_FILES += \
     $(call find-copy-subdir-files,*,$(KERNEL_PATH)/vendor_dlkm/,$(TARGET_COPY_OUT_VENDOR_DLKM)/lib/modules) \
@@ -183,9 +188,9 @@ PRODUCT_COPY_FILES += $(COMMON_PATH)/init/fstab.qcom:$(TARGET_COPY_OUT_VENDOR_RA
 
 
 
-#TARGET_KERNEL_SOURCE := kernel/oneplus/sm7550
-#TARGET_KERNEL_CONFIG := \
-#    gki_defconfig \
+TARGET_KERNEL_SOURCE := kernel/oneplus/sm8550
+TARGET_KERNEL_CONFIG := \
+    gki_defconfig \
 #    vendor/kalama_GKI.config \
 #    vendor/oplus/kalama_GKI.config \
 #    vendor/debugfs.config
@@ -202,7 +207,7 @@ PRODUCT_COPY_FILES += $(COMMON_PATH)/init/fstab.qcom:$(TARGET_COPY_OUT_VENDOR_RA
 #BOOT_KERNEL_MODULES := $(strip $(shell cat $(COMMON_PATH)/modules.load.recovery $(COMMON_PATH)/modules.include.vendor_ramdisk))
 #SYSTEM_KERNEL_MODULES := $(strip $(shell cat $(COMMON_PATH)/modules.include.system_dlkm))
 #
-#TARGET_KERNEL_EXT_MODULE_ROOT := kernel/oneplus/sm7550-modules
+#TARGET_KERNEL_EXT_MODULE_ROOT := kernel/oneplus/sm8550-modules
 #TARGET_KERNEL_EXT_MODULES := \
 #	qcom/opensource/mmrm-driver \
 #	qcom/opensource/mm-drivers/hw_fence \
